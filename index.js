@@ -36,6 +36,8 @@ async function run() {
 
     const postCollection = client.db("banao-project").collection("allPost")
     const usersCollection = client.db("banao-project").collection("users")
+    const commentCollection = client.db("banao-project").collection("comments")
+
 
     try {
 
@@ -79,17 +81,33 @@ async function run() {
         // save user in db
         app.post("/save-user", verifyJWT, async (req, res) => {
             const userInfo = req.body
-
             const result = await usersCollection.insertOne(userInfo)
             res.send(result)
         })
 
-        app.get("/profile", async (req, res) => {
+        // get profile for specific user
+        app.get("/profile", verifyJWT, async (req, res) => {
             const queryEmail = req.query.email;
             const filter = { email: queryEmail }
             const result = await usersCollection.findOne(filter)
             res.send(result)
         })
+
+
+        // api for adding comment
+        app.patch("/comment/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id
+            const comment = req.body;
+            const query = { _id: new ObjectId(id) }
+            const option = {
+                $push: {
+                    comment: comment
+                }
+            }
+            const result = await postCollection.updateOne(query, option)
+            res.send(result)
+        })
+
 
     }
 
