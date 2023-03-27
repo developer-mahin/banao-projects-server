@@ -109,6 +109,74 @@ async function run() {
         })
 
 
+        app.patch("/edit-contact/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const query = { _id: new ObjectId(id) }
+            const info = req.body;
+            const option = { upsert: true }
+            const updatedDoc = {
+                $set: {
+                    info: info
+                }
+            }
+
+            const result = await usersCollection.updateOne(query, updatedDoc, option)
+            res.send(result)
+        })
+
+        app.patch("/edit-info/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const info = req.body;
+
+            const updatedDoc = {
+                $set: {
+                    name: info.name,
+                    photo: info.photo,
+                    coverPhoto: info.coverImage,
+                    headLine: info.headline,
+                    education: info.education
+                }
+            }
+
+            const result = await usersCollection.updateOne(query, updatedDoc, option)
+            res.send(result)
+        })
+
+        app.patch("/change-profile-pic/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const info = req.body;
+            const query = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updatedDoc = {
+                $set: {
+                    photo: info.image,
+                }
+            }
+
+            const result = await usersCollection.updateOne(query, updatedDoc, option)
+            res.send(result)
+        })
+
+        app.patch("/change-cover-pic/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const info = req.body;
+            const query = { _id: new ObjectId(id) }
+            const option = { upsert: true }
+            const updatedDoc = {
+                $set: {
+                    coverPhoto: info.image,
+                }
+            }
+
+            const result = await usersCollection.updateOne(query, updatedDoc, option)
+            res.send(result)
+        })
+
+
+
     }
 
     finally {
