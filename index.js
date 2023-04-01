@@ -134,8 +134,6 @@ async function run() {
             const updatedDoc = {
                 $set: {
                     name: info.name,
-                    photo: info.photo,
-                    coverPhoto: info.coverImage,
                     headLine: info.headline,
                     education: info.education
                 }
@@ -175,6 +173,13 @@ async function run() {
             res.send(result)
         })
 
+        // get a specific user details
+        app.get("/user-details/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await usersCollection.findOne(query)
+            res.send(result)
+        })
 
 
     }
