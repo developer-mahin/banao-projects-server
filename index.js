@@ -109,6 +109,7 @@ async function run() {
         })
 
 
+        // update contact info
         app.patch("/edit-contact/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
             console.log(id)
@@ -125,6 +126,7 @@ async function run() {
             res.send(result)
         })
 
+        // update userinfo
         app.patch("/edit-info/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
@@ -143,6 +145,7 @@ async function run() {
             res.send(result)
         })
 
+        // update or change profile picture
         app.patch("/change-profile-pic/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
             const info = req.body;
@@ -158,6 +161,7 @@ async function run() {
             res.send(result)
         })
 
+        // update or change cover picture
         app.patch("/change-cover-pic/:id", verifyJWT, async (req, res) => {
             const id = req.params.id;
             const info = req.body;
@@ -178,6 +182,14 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
             const result = await usersCollection.findOne(query)
+            res.send(result)
+        })
+
+        // get api for getting specific user post data
+        app.get("/user-post", verifyJWT, async (req, res) => {
+            const email = req.query.email;
+            const query = { userEmail: email }
+            const result = await postCollection.find(query).toArray()
             res.send(result)
         })
 
