@@ -193,6 +193,20 @@ async function run() {
             res.send(result)
         })
 
+        // get api for getting specific user post using user name query
+        app.get("/user-details-post", verifyJWT, async (req, res) => {
+            const name = req.query.name;
+            const query = { userName: name }
+            const result = await postCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.get("/user-post-details/:id", async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await postCollection.findOne(query)
+            res.send(result)
+        })
 
     }
 
