@@ -201,6 +201,7 @@ async function run() {
             res.send(result)
         })
 
+
         app.get("/user-post-details/:id", async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) }
@@ -208,6 +209,21 @@ async function run() {
             res.send(result)
         })
 
+        // api for adding like
+        app.patch("/like/:id", verifyJWT, async (req, res) => {
+            const id = req.params.id;
+            const like = req.body;
+
+            const query = { _id: new ObjectId(id) }
+            const option = { 
+                $push: {
+                    like: like.likes
+                }
+             }
+  
+            const result = await postCollection.updateOne(query, option)
+            res.send(result)
+        })
     }
 
     finally {
