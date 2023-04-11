@@ -224,6 +224,13 @@ async function run() {
             const result = await postCollection.updateOne(query, option)
             res.send(result)
         })
+        
+        // get api for getting  all user 
+        app.get("/all-users", verifyJWT, async(req, res)=>{
+            const query = {}
+            const result = await usersCollection.find(query).toArray()
+            res.send(result)
+        })
     }
 
     finally {
