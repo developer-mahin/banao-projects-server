@@ -24,9 +24,11 @@ app.use(morgan("dev"))
 
 
 const userRoute = require("./routes/user-routes")
+const postRoute = require("./routes/post-routes")
+const messageRoute = require("./routes/message-routes")
 app.use("/api/v1/auth", userRoute)
-
-
+app.use("/api/v1/feed", postRoute)
+app.use("/api/v1/message", messageRoute)
 
 
 

@@ -22,7 +22,7 @@ function verifyJWT(req, res, next) {
         res.status(401).send({ message: "Unauthorized Access" })
     }
     const token = authHeader.split(" ")[1]
-    jwt.verify(token, process.env.ACCESS_TOKEN, function (err, decoded) {
+    jwt.verify(token, process.env.ACTIVATION_KEY, function (err, decoded) {
         if (err) {
             res.status(403).send({ message: "Unauthorized Access" })
         }
@@ -45,7 +45,7 @@ async function run() {
         // jwt token 
         app.post("/jwt", (req, res) => {
             const user = req.body;
-            const token = jwt.sign(user, process.env.ACCESS_TOKEN, { expiresIn: "365days" })
+            const token = jwt.sign(user, process.env.ACTIVATION_KEY, { expiresIn: "365days" })
             res.send({ token })
         })
 
@@ -87,7 +87,7 @@ async function run() {
         })
 
         // get profile for specific user JWT
-        app.get("/profile", verifyJWT, async (req, res) => {
+        app.get("/profile", async (req, res) => {
             const queryEmail = req.query.email;
             const filter = { email: queryEmail }
             const result = await usersCollection.findOne(filter)
@@ -187,12 +187,12 @@ async function run() {
         })
 
         // get api for getting specific user post data JWT
-        app.get("/user-post", verifyJWT, async (req, res) => {
-            const email = req.query.email;
-            const query = { userEmail: email }
-            const result = await postCollection.find(query).toArray()
-            res.send(result)
-        })
+        // app.get("/user-post", verifyJWT, async (req, res) => {
+        //     const email = req.query.email;
+        //     const query = { userEmail: email }
+        //     const result = await postCollection.find(query).toArray()
+        //     res.send(result)
+        // })
 
         // get api for getting specific user post using user name query JWT
         app.get("/user-details-post", verifyJWT, async (req, res) => {

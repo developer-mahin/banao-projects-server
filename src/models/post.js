@@ -4,14 +4,7 @@ const { ObjectId } = mongoose.Schema.Types
 
 
 const postSchema = mongoose.Schema({
-    userEmail: {
-        type: String,
-        required: [true, "Email is required"],
-        trim: true,
-        unique: true,
-        validate: [validator.isEmail, "Please provide a valid email"],
-        lowercase: true,
-    },
+
     userName: {
         type: String,
         required: [true, "User name is required"],
@@ -27,10 +20,7 @@ const postSchema = mongoose.Schema({
         type: String,
         validate: [validator.isURL, "Please provide a valid url"]
     },
-    userId: {
-        type: ObjectId,
-        ref: "User"
-    },
+    userId: String,
 
     comment: [
         {
@@ -65,5 +55,5 @@ const postSchema = mongoose.Schema({
 
 
 
-const AllPost = mongoose.model("allPost", postSchema)
-module.exports = AllPost
+const Post = mongoose.model("Post", postSchema)
+module.exports = Post

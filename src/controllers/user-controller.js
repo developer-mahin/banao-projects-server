@@ -26,7 +26,7 @@ exports.signUp = async (req, res, next) => {
             status: "active"
         }
 
-        const token = createJsonWebToken(userData, process.env.ACCESS_TOKEN, "10m")
+        const token = createJsonWebToken(userData, process.env.ACTIVATION_KEY, "10m")
 
         try {
 
@@ -75,7 +75,7 @@ exports.verifyUser = async (req, res, next) => {
 
         try {
 
-            const decoded = jwt.verify(token, process.env.ACCESS_TOKEN)
+            const decoded = jwt.verify(token, process.env.ACTIVATION_KEY)
 
             console.log(decoded)
 
@@ -83,19 +83,34 @@ exports.verifyUser = async (req, res, next) => {
             if (isUserExit) {
                 throw createError(400, "user already with this email address please try another email address")
             }
-            const user = await User.create(decoded)
-            // res.status(201).send({
-            //     success: true,
-            //     message: "successfully created the user",
-            //     user
-            // })
+            await User.create(decoded)
 
             res.send(`
-            
-            <h1 style="text-align:center">Hello ${decoded.name}</h1>
-            <h2 style="text-align:center">You are now a verified user</h2>
 
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Document</title>
+            </head>
+            <body
+                style="background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)), url(https://i.ibb.co/wYYTcPF/JOB-HUNTER-removebg-preview.png); 
+                background-position: center; background-repeat: no-repeat; background-size: contain;  display: flex; align-items:  center; justify-content: center; height: 98vh; color: white;">
+                <div>
+                    <h1 style="text-align:center ; font-size: 70px; margin: 0;">Hello ${decoded.name}</h1>
+                    <p style="text-align:center ;font-size: 50px; margin: 0;">You are now a verified user</p>
+                    <p style="text-align:center ;font-size: 40px; margin: 0;">Please login your with your account</p>
+                    <div style="display: flex; align-items: center; justify-content: center; margin-top: 20px;">
+                        <a href="http://localhost:3000/login"
+                            style="padding: 12px 20px; background-color: aqua; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 30px;">Login</a>
+                    </div>
+                </div>
+            </body>
+            </html>
             `)
+
+
         } catch (error) {
             if (error.name === "TokenExpiredError") {
                 throw createError(401, "Token expired")
@@ -109,6 +124,77 @@ exports.verifyUser = async (req, res, next) => {
         }
 
         res.send("you are now verified user")
+    } catch (error) {
+        next(error)
+    }
+}
+
+exports.signIn = async (req, res, next) => {
+
+    try {
+
+        const { email, password } = req.body;
+        const user = await User.findOne({ email })
+        if (!user) {
+            throw createError(404, "User not found with this email address. Please register first")
+        }
+
+        const isPasswordMatched = bcrypt.compare(password, user.password)
+        if (!isPasswordMatched) {
+            throw createError(401, "Email/Password does'nt matched please try with valid email and password")
+        }
+
+        if (user.status !== "active") {
+            throw createError(400, "You are a blocked user. Please contact with authority")
+        }
+
+        const accessToken = createJsonWebToken(
+            { email, _id: user._id },
+            process.env.ACCESS_KEY,
+            "365d"
+        )
+
+        res.cookie("accessToken", accessToken, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            secure: true,
+            sameSite: "none"
+        })
+
+        res.status(200).json({
+            success: true,
+            message: "user login successfully",
+            user,
+            accessToken,
+        })
+
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+exports.logout = async (req, res, next) => {
+
+    try {
+
+        res.clearCookie("access_token")
+        res.status(200).json({
+            success: true,
+            message: "user logged out successfully"
+        })
+
+    } catch (error) {
+        next(error)
+    }
+
+}
+
+exports.getSpecificUser = async(req,res, next)=>{
+    try {
+        
+        
+
     } catch (error) {
         next(error)
     }
