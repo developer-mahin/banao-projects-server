@@ -20,7 +20,7 @@ router
     .get(userController.verifyUser)
 
 router
-    .route("/profile")
-    .get(userController.getSpecificUser)
+    .route("/anUserDetails")
+    .get(userController.getAnUserDetails)
 
 module.exports = router;

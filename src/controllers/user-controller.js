@@ -190,10 +190,15 @@ exports.logout = async (req, res, next) => {
 
 }
 
-exports.getSpecificUser = async(req,res, next)=>{
+exports.getAnUserDetails = async (req, res, next) => {
     try {
-        
-        
+        const { id } = req.params
+        const result = await User.findOne({ _id: id })
+        res.status(200).json({
+            success: true,
+            message: "successfully get an user details",
+            user: result
+        })
 
     } catch (error) {
         next(error)

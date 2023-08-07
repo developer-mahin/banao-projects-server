@@ -85,3 +85,28 @@ exports.updateProfilePic = async (req, res, next) => {
         next(error)
     }
 }
+
+exports.updateCoverPhoto = async (req, res, next) => {
+    try {
+
+        const { id } = req.params;
+        const { coverPhoto } = req.body;
+        const option = { upsert: true }
+        const updatedDoc = {
+            $set: {
+                coverPhoto
+            }
+        }
+
+        const result = await User.findOneAndUpdate({ _id: id }, updatedDoc, option)
+        res.status(201).json({
+            success: true,
+            message: "successfully updated profile pic",
+            result,
+        })
+
+
+    } catch (error) {
+        next(error)
+    }
+}
