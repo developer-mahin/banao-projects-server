@@ -20,7 +20,10 @@ const postSchema = mongoose.Schema({
         type: String,
         validate: [validator.isURL, "Please provide a valid url"]
     },
-    userId: String,
+    // userId: {
+    //     type: ObjectId,
+    //     ref: "User"
+    // },
 
     comment: [
         {
