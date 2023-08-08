@@ -5,11 +5,8 @@ const mongoose = require("mongoose");
 const app = require("./app");
 const socket = require("socket.io");
 
-// const uri = `mongodb+srv://${process.env.USER_NAME}:${process.env.PASSWORD}@cluster0.dpsxnyh.mongodb.net/?retryWrites=true&w=majority`;
 
-const uri = "mongodb://127.0.0.1:27017/job-hunter"
-
-mongoose.connect(uri)
+mongoose.connect(process.env.DATABASE)
     .then(() => {
         console.log("Database connect successfully".blue.bold)
     })
