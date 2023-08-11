@@ -9,5 +9,8 @@ router
     .route("/add-post")
     .post(verifyJsonWebToken, postController.addPost)
 
+router
+    .route("/all-post")
+    .get(verifyJsonWebToken, postController.getAllPost)
 
 module.exports = router;

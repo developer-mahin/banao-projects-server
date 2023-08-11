@@ -16,3 +16,11 @@ exports.addPost = async (req, res, next) => {
         next(error)
     }
 }
+
+exports.getAllPost = async (req, res, next)=>{
+    try {
+        
+    } catch (error) {
+        
+    }
+}
