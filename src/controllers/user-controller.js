@@ -190,6 +190,27 @@ exports.logout = async (req, res, next) => {
 
 }
 
+exports.searchUsers = async (req, res, next) => {
+    try {
+        const keyword = req.query.search ? {
+            $or: [
+                { name: { $regex: req.query.search } },
+                { email: { $regex: req.query.search } },
+            ]
+        }
+            : {}
+
+        const users = await User.find(keyword).toArray()
+        res.status(200).json({
+            success: true,
+            message: "successfully get the data",
+            users
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 exports.getAnUserDetails = async (req, res, next) => {
     try {
         const { id } = req.params

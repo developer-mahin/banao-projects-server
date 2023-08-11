@@ -16,11 +16,17 @@ router
     .post(userController.logout)
 
 router
+    .route("/anUserDetails")
+    .get(userController.getAnUserDetails)
+
+router
+    .route("/search-user")
+    .get(userController.searchUsers)
+
+router
     .route("/verify/:token")
     .get(userController.verifyUser)
 
-router
-    .route("/anUserDetails")
-    .get(userController.getAnUserDetails)
+
 
 module.exports = router;
